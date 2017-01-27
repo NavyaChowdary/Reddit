@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+
+<div class="container">
+  <div class="table-responsive">
+    <table class="table table-striped" id="redditTable">
+      <thead>
+        <tr>
+          <th>Title</th>
+          <th>Number of Subscribers</th>
+          <th>Public Description</th>
+        </tr>
+      </thead>
+    </table>
+  </div>
+</div>
+
+<script>
+/*Get JSON from URL*/
+var xmlhttp = new XMLHttpRequest();
+var url = "https://www.reddit.com/subreddits/search.json?q=reactjs";
+
+xmlhttp.onreadystatechange = function() {
+  if (this.readyState == 4 && this.status == 200) {
+    var reddit = JSON.parse(this.responseText);
+    constructTable(reddit);
+  }
+};
+xmlhttp.open("GET", url, true);
+xmlhttp.send();
+
+function constructTable(reddit) {
+  /*create tbody and append it to table*/
+  var redditTableTbody = document.createElement('tbody');
+  document.getElementById("redditTable").appendChild(redditTableTbody);
+
+  /* Add subreddits as rows to table body */
+  for (i in reddit.data.children) {
+    var subredditRow = redditTableTbody.insertRow();
+    var subreddit = reddit.data.children[i];
+    subredditRow.insertCell(0).innerHTML += subreddit.data.title;
+    subredditRow.insertCell(1).innerHTML += subreddit.data.subscribers;
+    subredditRow.insertCell(2).innerHTML += subreddit.data.public_description;
+  }
+}
+</script>
+
+</body>
+</html>
